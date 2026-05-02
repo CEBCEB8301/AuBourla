@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Au Bourlatsapi — Bistrot Raffiné · Bercher</title>
+  <meta name="description" content="Bistrot raffiné au cœur de Bercher. Cuisine de qualité, produits frais. Place du Collège 10, 1038 Bercher." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #16120e;
+      --surface:  #1e1812;
+      --surface2: #272018;
+      --gold:     #c8a86a;
+      --gold-dim: #7a6440;
+      --text:     #ede8e0;
+      --muted:    #7d7368;
+      --border:   rgba(200,168,106,0.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Jost', sans-serif; font-weight: 300; line-height: 1.7; overflow-x: hidden; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.6rem 4rem;
+      transition: background 0.4s, padding 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(22,18,14,0.97);
+      padding: 1rem 4rem;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+    .nav-links { display: flex; gap: 2.8rem; list-style: none; }
+    .nav-links a { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 6rem 2rem 4rem;
+      background:
+        linear-gradient(to bottom, rgba(22,18,14,0.35) 0%, rgba(22,18,14,0.65) 60%, var(--bg) 100%),
+        url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80') center/cover no-repeat;
+    }
+    .hero-eyebrow { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.8rem; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 8vw, 7rem); font-weight: 300; line-height: 1.0; margin-bottom: 0.4rem; }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 3.5rem; }
+    .hero-divider { width: 40px; height: 1px; background: var(--gold-dim); margin: 0 auto 3.5rem; }
+    .hero-cta { display: inline-block; padding: 0.9rem 2.8rem; border: 1px solid var(--gold-dim); font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); transition: background 0.3s, border-color 0.3s; }
+    .hero-cta:hover { background: rgba(200,168,106,0.08); border-color: var(--gold); }
+
+    /* SECTIONS */
+    section { padding: 7rem 4rem; }
+    .section-eyebrow { font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; line-height: 1.15; margin-bottom: 1rem; }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-line { width: 32px; height: 1px; background: var(--gold-dim); margin-bottom: 3rem; }
+    .centered { text-align: center; }
+    .centered .section-line { margin-left: auto; margin-right: auto; }
+
+    /* MENU */
+    #menu { background: var(--surface); }
+    .menu-tabs { display: flex; gap: 0; margin-bottom: 3.5rem; border-bottom: 1px solid var(--border); justify-content: center; }
+    .menu-tab { padding: 0.7rem 2rem; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; background: none; border-top: none; border-left: none; border-right: none; font-family: 'Jost', sans-serif; }
+    .menu-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .menu-tab:hover { color: var(--text); }
+    .menu-panel { display: none; }
+    .menu-panel.active { display: block; }
+    .menu-items { max-width: 680px; margin: 0 auto; }
+    .menu-category { margin-bottom: 3rem; }
+    .menu-category-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic; font-weight: 300; color: var(--gold); margin-bottom: 0.4rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+    .menu-item { display: flex; align-items: baseline; justify-content: space-between; padding: 1.1rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 1rem; }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item-left { flex: 1; }
+    .menu-item-name { font-size: 0.95rem; font-weight: 400; color: var(--text); margin-bottom: 0.2rem; }
+    .menu-item-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+    .menu-item-tags { display: flex; gap: 6px; margin-top: 0.3rem; flex-wrap: wrap; }
+    .tag { font-size: 0.55rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 7px; border: 1px solid var(--gold-dim); color: var(--gold-dim); }
+    .menu-item-price { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 400; color: var(--gold); white-space: nowrap; }
+    .menu-loading { text-align: center; color: var(--muted); font-size: 0.8rem; letter-spacing: 0.1em; padding: 3rem 0; }
+
+    /* PHOTOS */
+    #photos { background: var(--bg); }
+    .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 3rem; }
+    .photo-grid img { width: 100%; aspect-ratio: 4/3; object-fit: cover; filter: brightness(0.85) saturate(0.8); transition: filter 0.4s; }
+    .photo-grid img:hover { filter: brightness(1) saturate(1); }
+
+    /* CONTACT */
+    #contact { background: var(--surface); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; max-width: 900px; margin: 0 auto; }
+    .hours-row { display: flex; justify-content: space-between; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-day { color: var(--muted); }
+    .hours-time { color: var(--text); }
+    .hours-closed { color: var(--gold-dim); font-style: italic; }
+    .contact-info { display: flex; flex-direction: column; gap: 1.6rem; }
+    .contact-item { display: flex; flex-direction: column; gap: 0.3rem; }
+    .contact-label { font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-dim); }
+    .contact-value { font-size: 0.9rem; color: var(--text); }
+    .contact-value a:hover { color: var(--gold); }
+    .reservation-btn { display: inline-block; margin-top: 2rem; padding: 0.85rem 2.4rem; border: 1px solid var(--gold-dim); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); transition: all 0.3s; }
+    .reservation-btn:hover { background: rgba(200,168,106,0.08); border-color: var(--gold); }
+
+    /* FOOTER */
+    footer { background: var(--bg); border-top: 1px solid var(--border); padding: 2.5rem 4rem; display: flex; align-items: center; justify-content: space-between; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; letter-spacing: 0.1em; color: var(--gold-dim); }
+    .footer-copy { font-size: 0.7rem; color: var(--muted); }
+    .social-links { display: flex; gap: 1.4rem; }
+    .social-links a { font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+    .social-links a:hover { color: var(--gold); }
+
+    /* ANIM */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      nav.scrolled { padding: 0.9rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 5rem 1.5rem; }
+      .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .photo-grid { grid-template-columns: repeat(2, 1fr); }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="navbar">
+    <a href="#" class="nav-logo">Au Bourlatsapi</a>
+    <ul class="nav-links">
+      <li><a href="#menu">Les mets</a></li>
+      <li><a href="#photos">Photos</a></li>
+      <li><a href="#contact">Horaires</a></li>
+      <li><a href="#contact">Réservation</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <p class="hero-eyebrow">Bercher · Bistrot raffiné</p>
+    <h1>Au<br><em>Bourlatsapi</em></h1>
+    <p class="hero-sub">Place du Collège · 1038 Bercher</p>
+    <div class="hero-divider"></div>
+    <a href="#menu" class="hero-cta">Découvrir les mets</a>
+  </section>
+
+  <section id="menu">
+    <div class="centered reveal">
+      <p class="section-eyebrow">Cuisine de saison</p>
+      <h2 class="section-title">Les <em>mets</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="menu-tabs" id="menuTabs">
+      <button class="menu-tab active" data-panel="mets">Les mets</button>
+      <button class="menu-tab" data-panel="burgers">Burgers &amp; Snacks</button>
+    </div>
+    <div id="menuContent">
+      <div class="menu-loading" id="menuLoading">Chargement…</div>
+    </div>
+  </section>
+
+  <section id="photos">
+    <div class="centered reveal">
+      <p class="section-eyebrow">L'ambiance</p>
+      <h2 class="section-title">Le <em>restaurant</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="photo-grid reveal">
+      <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?w=600&q=80" alt="Salle" />
+      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80" alt="Plat" />
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="Ambiance" />
+      <img src="https://images.unsplash.com/photo-1559339352-11d035aa65ce?w=600&q=80" alt="Bar" />
+      <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80" alt="Viande" />
+      <img src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=600&q=80" alt="Dessert" />
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="centered reveal">
+      <p class="section-eyebrow">Nous trouver</p>
+      <h2 class="section-title">Horaires &amp; <em>contact</em></h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid reveal">
+      <div>
+        <p class="section-eyebrow" style="margin-bottom:1.2rem;">Horaires d'ouverture</p>
+        <div>
+          <div class="hours-row"><span class="hours-day">Lundi</span><span class="hours-closed">Fermé</span></div>
+          <div class="hours-row"><span class="hours-day">Mardi</span><span class="hours-time">11h30 – 14h · 18h – 22h</span></div>
+          <div class="hours-row"><span class="hours-day">Mercredi</span><span class="hours-time">11h30 – 14h · 18h – 22h</span></div>
+          <div class="hours-row"><span class="hours-day">Jeudi</span><span class="hours-time">11h30 – 14h · 18h – 22h</span></div>
+          <div class="hours-row"><span class="hours-day">Vendredi</span><span class="hours-time">11h30 – 14h · 18h – 23h</span></div>
+          <div class="hours-row"><span class="hours-day">Samedi</span><span class="hours-time">11h30 – 14h · 18h – 23h</span></div>
+          <div class="hours-row"><span class="hours-day">Dimanche</span><span class="hours-closed">Fermé</span></div>
+        </div>
+      </div>
+      <div class="contact-info">
+        <div class="contact-item">
+          <span class="contact-label">Adresse</span>
+          <span class="contact-value">
+            <a href="https://www.google.ch/maps/place/Café+Restaurant+Au+Bourlatsapi" target="_blank">Place du Collège 10<br>1038 Bercher</a>
+          </span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Téléphone</span>
+          <span class="contact-value"><a href="tel:0218876610">021 887 66 10</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Email</span>
+          <span class="contact-value"><a href="mailto:aubourlatsapi@hotmail.com">aubourlatsapi@hotmail.com</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Réseaux sociaux</span>
+          <span class="contact-value">
+            <a href="https://www.instagram.com/aubourlatsapi/" target="_blank" style="margin-right:1rem;">Instagram</a>
+            <a href="https://www.facebook.com/AuBourla" target="_blank">Facebook</a>
+          </span>
+        </div>
+        <a href="tel:0218876610" class="reservation-btn">Réserver une table</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-logo">Au Bourlatsapi</span>
+    <span class="footer-copy">© 2025 Au Bourlatsapi · Bercher</span>
+    <div class="social-links">
+      <a href="https://www.instagram.com/aubourlatsapi/" target="_blank">Instagram</a>
+      <a href="https://www.facebook.com/AuBourla" target="_blank">Facebook</a>
+    </div>
+  </footer>
+
+  <script>
+    // ═══════════════════════════════════════════════════
+    //  CONFIGURATION — à remplir une seule fois
+    // ═══════════════════════════════════════════════════
+    // 1. Crée un Google Sheet avec 2 onglets : "Mets" et "Burgers"
+    // 2. Colonnes : Catégorie | Nom | Description | Prix | Tags
+    // 3. Fichier > Partager > Publier sur le Web
+    // 4. Copie l'ID du Sheet depuis l'URL et colle-le ici :
+    const SHEET_ID = ''; // ex: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms'
+    // ═══════════════════════════════════════════════════
+
+    const FALLBACK = {
+      mets: [
+        { category: 'Entrées froides', items: [
+          { name: 'Salade verte', desc: '', price: '8 CHF', tags: ['Végétarien'] },
+          { name: 'Salade mêlée', desc: '', price: '8 CHF', tags: ['Végétarien'] },
+          { name: 'Salade de crevettes tièdes', desc: '', price: '16 CHF', tags: [] },
+        ]},
+        { category: 'Entrées chaudes', items: [
+          { name: 'Noix de St-Jacques poêlées au citron vert', desc: '', price: '20 CHF', tags: [] },
+          { name: 'Beignets de filets de perches', desc: '3 pièces', price: '12 CHF', tags: [] },
+        ]},
+        { category: 'Viandes', items: [
+          { name: 'Tartare de bœuf aux olives 160 gr', desc: 'Également disponible 250 gr pour 35 CHF', price: '28 CHF', tags: ['Légèrement piquant'] },
+          { name: 'Tartare de bœuf façon asiatique 160 gr', desc: 'Également disponible 250 gr pour 35 CHF', price: '28 CHF', tags: ['Piquant'] },
+          { name: 'Entrecôte parisienne de bœuf 200 gr', desc: 'Également disponible 300 gr pour 35 CHF', price: '28 CHF', tags: [] },
+          { name: 'Tagliata de bœuf', desc: 'Servi sur un lit de roquette, copeaux de parmesan, olives, frites', price: '28 CHF', tags: [] },
+          { name: 'Émincé de poulet au soja', desc: '', price: '26 CHF', tags: [] },
+        ]},
+        { category: 'Poissons & crustacés', items: [
+          { name: 'Gambas décortiquées sauce au citron', desc: '', price: '35 CHF', tags: [] },
+          { name: 'Beignets de filet de perche', desc: 'Servis avec frites et salade', price: '26 CHF', tags: [] },
+          { name: 'Filet de saumon en croûte de sésame', desc: '', price: '32 CHF', tags: [] },
+        ]},
+      ],
+      burgers: [
+        { category: 'Burgers & Snacks', items: [
+          { name: 'À compléter dans le Google Sheet', desc: '', price: '—', tags: [] },
+        ]},
+      ]
+    };
+
+    function renderMenu(data, activePanel) {
+      const container = document.getElementById('menuContent');
+      let html = '';
+      Object.keys(data).forEach(key => {
+        html += `<div class="menu-panel ${key === activePanel ? 'active' : ''}" id="panel-${key}"><div class="menu-items">`;
+        data[key].forEach(cat => {
+          html += `<div class="menu-category"><div class="menu-category-title">${cat.category}</div>`;
+          cat.items.forEach(item => {
+            const tags = item.tags && item.tags.length
+              ? `<div class="menu-item-tags">${item.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : '';
+            html += `<div class="menu-item">
+              <div class="menu-item-left">
+                <div class="menu-item-name">${item.name}</div>
+                ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ''}
+                ${tags}
+              </div>
+              <div class="menu-item-price">${item.price}</div>
+            </div>`;
+          });
+          html += `</div>`;
+        });
+        html += `</div></div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    async function fetchTab(sheetId, tabName) {
+      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}`;
+      const res  = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
+      const cats = {};
+      json.table.rows.forEach(row => {
+        const c = row.c;
+        if (!c || !c[0] || !c[0].v) return;
+        const cat  = c[0].v;
+        const name = c[1] ? c[1].v : '';
+        const desc = c[2] ? c[2].v : '';
+        const price = c[3] ? c[3].v + ' CHF' : '';
+        const tags  = c[4] ? String(c[4].v).split(',').map(t => t.trim()).filter(Boolean) : [];
+        if (!cats[cat]) cats[cat] = { category: cat, items: [] };
+        cats[cat].items.push({ name, desc, price, tags });
+      });
+      return Object.values(cats);
+    }
+
+    async function loadMenu() {
+      if (!SHEET_ID) {
+        document.getElementById('menuLoading').style.display = 'none';
+        renderMenu(FALLBACK, 'mets');
+        return;
+      }
+      try {
+        const [mets, burgers] = await Promise.all([
+          fetchTab(SHEET_ID, 'Mets'),
+          fetchTab(SHEET_ID, 'Burgers'),
+        ]);
+        document.getElementById('menuLoading').style.display = 'none';
+        renderMenu({ mets, burgers }, 'mets');
+      } catch(e) {
+        document.getElementById('menuLoading').style.display = 'none';
+        renderMenu(FALLBACK, 'mets');
+      }
+    }
+
+    document.getElementById('menuTabs').addEventListener('click', e => {
+      const btn = e.target.closest('.menu-tab');
+      if (!btn) return;
+      document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const p = document.getElementById('panel-' + btn.dataset.panel);
+      if (p) p.classList.add('active');
+    });
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
+
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    loadMenu();
+  </script>
+</body>
+</html>
